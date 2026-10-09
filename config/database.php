@@ -153,6 +153,17 @@ return [
             'persistent' => env('REDIS_PERSISTENT', false),
         ],
 
+        'chatbot' => [
+            'host' => env('CHATBOT_REDIS_HOST', env('REDIS_HOST', '127.0.0.1')),
+            'port' => env('CHATBOT_REDIS_PORT', env('REDIS_PORT', '6379')),
+            'username' => env('CHATBOT_REDIS_USERNAME'),
+            'password' => env('CHATBOT_REDIS_PASSWORD', env('REDIS_PASSWORD')),
+            'database' => env('CHATBOT_REDIS_DB', '2'),
+            'timeout' => 1,
+            'read_timeout' => 1,
+            'max_retries' => 0,
+        ],
+
         'default' => [
             'url' => env('REDIS_URL'),
             'host' => env('REDIS_HOST', '127.0.0.1'),

@@ -1,6 +1,7 @@
 import { effectScope } from "vue";
 import { afterEach, expect, it, vi } from "vitest";
 import { useChatbot } from "../../resources/js/composables/useChatbot";
+import { mockResponder } from "../../resources/js/chatbot/mockResponder";
 import type { ChatResponder } from "../../resources/js/chatbot/types";
 const scopes: ReturnType<typeof effectScope>[] = [];
 afterEach(() => {
@@ -8,7 +9,7 @@ afterEach(() => {
     scopes.length = 0;
     vi.useRealTimers();
 });
-function setup(responder?: ChatResponder) {
+function setup(responder: ChatResponder = mockResponder) {
     const scope = effectScope();
     scopes.push(scope);
     return { scope, chat: scope.run(() => useChatbot(responder))! };
@@ -60,7 +61,7 @@ it("AC-08 rejection allows retry without another user entry", async () => {
     chat.draft.value = "hello";
     await chat.submit();
     expect(chat.error.value).toBe(
-        "Could not generate a mock reply. Please try again.",
+        "Could not send your question. Please try again.",
     );
     expect(chat.pending.value).toBe(false);
     expect(chat.canRetry.value).toBe(true);

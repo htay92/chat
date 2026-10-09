@@ -14,6 +14,7 @@ const {
     validationError,
     error,
     canRetry,
+    retryDisabled,
     submit,
     retry,
 } = useChatbot(props.responder);
@@ -43,6 +44,7 @@ function send() {
     void submit();
 }
 function resend() {
+    if (retryDisabled.value) return;
     panel.value?.focus();
     void retry();
 }
@@ -60,6 +62,7 @@ function resend() {
             :validation-error="validationError"
             :error="error"
             :can-retry="canRetry"
+            :retry-disabled="retryDisabled"
             @close="close"
             @send="send"
             @retry="resend"
