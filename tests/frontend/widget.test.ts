@@ -16,6 +16,66 @@ afterEach(() => {
     document.body.innerHTML = "";
     vi.useRealTimers();
 });
+it("004 AC-10/11 avatars and separate names remain accessible through retry", async () => {
+    const responder = vi.fn().mockRejectedValueOnce(new Error()).mockResolvedValue("reply\n😀");
+    const w = setup(responder);
+    await w.get('[aria-label="Open chat"]').trigger("click");
+    expect(w.findAll(".chat-avatar")).toHaveLength(0);
+    await w.get("textarea").setValue("hello\n😀");
+    await w.get("form").trigger("submit");
+    await flushPromises();
+    expect(w.findAll(".chat-avatar-user")).toHaveLength(1);
+    const retry = w.findAll("button").find((b) => b.text() === "Retry")!;
+    await retry.trigger("click");
+    await flushPromises();
+    const rows = w.get('[role="log"]').findAll("li");
+    expect(rows).toHaveLength(2);
+    expect(rows[0]!.get("strong").text()).toBe("You");
+    expect(rows[0]!.get("p").text()).toBe("hello\n😀");
+    expect(rows[1]!.get("strong").text()).toBe("Assistant");
+    for (const [index, row] of rows.entries()) {
+        const name = row.get("strong");
+        const bubble = row.get(".chat-message");
+        expect(row.findAll("strong")).toHaveLength(1);
+        expect(bubble.find("strong").exists()).toBe(false);
+        expect(bubble.text()).toBe(index === 0 ? "hello\n😀" : "reply\n😀");
+        expect(name.element.parentElement).toBe(row.element);
+        expect(name.element.nextElementSibling).toBe(bubble.element);
+        expect(name.attributes("aria-hidden")).toBeUndefined();
+        expect(row.attributes("aria-label")).toBeUndefined();
+        expect(bubble.attributes("aria-label")).toBeUndefined();
+        expect(row.find("[aria-live]").exists()).toBe(false);
+    }
+    expect(rows[0]!.element.lastElementChild).toBe(rows[0]!.get(".chat-avatar-user").element);
+    expect(rows[1]!.element.firstElementChild).toBe(rows[1]!.get(".chat-avatar-assistant").element);
+    expect(w.findAll(".chat-avatar")).toHaveLength(2);
+    for (const avatar of w.findAll(".chat-avatar")) {
+        expect(avatar.attributes("aria-hidden")).toBe("true");
+        expect(avatar.attributes("tabindex")).toBeUndefined();
+        const icon = avatar.get("svg");
+        expect(icon.attributes("aria-hidden")).toBe("true");
+        expect(icon.attributes("focusable")).toBe("false");
+        expect(icon.find("title").exists()).toBe(false);
+    }
+    expect(w.get('[role="log"]').attributes("aria-live")).toBe("polite");
+    expect(w.find('[role="alert"]').exists()).toBe(false);
+});
+it("004 AC-03/06 decorative icons and demo badge preserve accessible controls", async () => {
+    const w = setup();
+    const launcher = w.get('[aria-label="Open chat"]');
+    const icon = launcher.get("svg");
+    expect(icon.attributes("aria-hidden")).toBe("true");
+    expect(icon.attributes("focusable")).toBe("false");
+    await launcher.trigger("click");
+    const header = w.get("header");
+    expect(header.get("svg").attributes("aria-hidden")).toBe("true");
+    expect(header.get("svg").attributes("focusable")).toBe("false");
+    expect(header.get(".chat-demo-badge").text()).toBe("Demo");
+    const title = header.get("h2");
+    expect(title.text()).toBe("Demo chatbot");
+    expect(w.get('[role="dialog"]').attributes("aria-labelledby")).toBe(title.attributes("id"));
+    expect(w.get(".chat-notice").text()).toBe("Demo only — responses are mocked.");
+});
 it("AC-01/02/10 starts closed, opens accessible dialog, and restores launcher focus", async () => {
     const w = setup();
     const launcher = w.get("button");
