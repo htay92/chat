@@ -1,5 +1,6 @@
 import { mount, flushPromises, type VueWrapper } from "@vue/test-utils";
 import { afterEach, expect, it, vi } from "vitest";
+import { mockResponder } from "../../resources/js/chatbot/mockResponder";
 import ChatbotWidget from "../../resources/js/components/chatbot/ChatbotWidget.vue";
 const wrappers: VueWrapper[] = [];
 function setup(responder?: (m: string, s: AbortSignal) => Promise<string>) {
@@ -74,7 +75,7 @@ it("004 AC-03/06 decorative icons and demo badge preserve accessible controls", 
     const title = header.get("h2");
     expect(title.text()).toBe("Demo chatbot");
     expect(w.get('[role="dialog"]').attributes("aria-labelledby")).toBe(title.attributes("id"));
-    expect(w.get(".chat-notice").text()).toBe("Demo only — responses are mocked.");
+    expect(w.get(".chat-notice").text()).toBe("Demo FAQ answers. Questions are normally deleted within 91 days to improve FAQs. Don’t include personal or sensitive information.");
 });
 it("AC-01/02/10 starts closed, opens accessible dialog, and restores launcher focus", async () => {
     const w = setup();
@@ -86,7 +87,7 @@ it("AC-01/02/10 starts closed, opens accessible dialog, and restores launcher fo
     expect(panel.isVisible()).toBe(true);
     expect(panel.attributes("aria-modal")).toBeUndefined();
     expect(launcher.attributes("aria-controls")).toBe(panel.attributes("id"));
-    expect(w.text()).toContain("Demo only — responses are mocked.");
+    expect(w.text()).toContain("Demo FAQ answers. Questions are normally deleted within 91 days to improve FAQs. Don’t include personal or sensitive information.");
     expect(document.activeElement).toBe(w.get("textarea").element);
     await panel.trigger("keydown", { key: "Escape" });
     expect(panel.isVisible()).toBe(false);
@@ -195,7 +196,7 @@ it("AC-08/11 responder failure is an alert, re-enables input, and Retry preserve
     await w.get("textarea").setValue("hi");
     await w.get("form").trigger("submit");
     await flushPromises();
-    expect(w.get('[role="alert"]').text()).toContain("Could not generate");
+    expect(w.get('[role="alert"]').text()).toContain("Could not send");
     expect((w.get("textarea").element as HTMLTextAreaElement).disabled).toBe(
         false,
     );
@@ -208,7 +209,7 @@ it("AC-08/11 responder failure is an alert, re-enables input, and Retry preserve
 it("AC-07/09 pending guards keyboard and unmount clears timers", async () => {
     vi.useFakeTimers();
     const clear = vi.spyOn(globalThis, "clearTimeout");
-    const w = setup();
+    const w = setup(mockResponder);
     await w.get("button").trigger("click");
     await w.get("textarea").setValue("hi");
     await w.get("form").trigger("submit");

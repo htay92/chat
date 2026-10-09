@@ -51,6 +51,7 @@ return [
     */
 
     'channels' => [
+        'chatbot_audit' => ['driver' => 'single', 'path' => storage_path('logs/chatbot-audit.log'), 'level' => 'info', 'permission' => 0600],
 
         'stack' => [
             'driver' => 'stack',

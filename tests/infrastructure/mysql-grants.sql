@@ -1,0 +1,1 @@
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, REFERENCES ON `chatbot_test_%`.* TO 'chatbot_test'@'%';

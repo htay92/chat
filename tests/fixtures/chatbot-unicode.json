@@ -1,0 +1,22 @@
+[
+  {
+    "input": "﻿ Hello\nworld ﻿",
+    "text": "Hello\nworld",
+    "valid": true
+  },
+  {
+    "input": "﻿ \t",
+    "text": "",
+    "valid": false
+  },
+  {
+    "input": "​Hi​",
+    "text": "​Hi​",
+    "valid": true
+  },
+  {
+    "input": " café 東京? ",
+    "text": "café 東京?",
+    "valid": true
+  }
+]

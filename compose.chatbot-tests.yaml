@@ -1,0 +1,52 @@
+services:
+    chatbot-test-runner:
+        image: sail-8.5/app
+        entrypoint: ["/bin/sh", "-c", "exec sleep infinity"]
+        working_dir: /var/www/html
+        volumes:
+            - '.:/var/www/html'
+        environment:
+            CHATBOT_TEST_RUN: '1'
+            APP_ENV: testing
+            DB_HOST: chatbot-test-mysql
+            DB_USERNAME: chatbot_test
+            DB_PASSWORD: isolated-test-only
+            REDIS_HOST: chatbot-test-redis
+            REDIS_PASSWORD: isolated-test-only
+            DB_URL: ''
+            REDIS_URL: ''
+        networks: [chatbot-tests]
+        depends_on:
+            chatbot-test-mysql:
+                condition: service_healthy
+            chatbot-test-redis:
+                condition: service_healthy
+    chatbot-test-mysql:
+        image: mysql:8.4
+        environment:
+            MYSQL_ROOT_PASSWORD: isolated-root-test-only
+            MYSQL_USER: chatbot_test
+            MYSQL_PASSWORD: isolated-test-only
+            MYSQL_DATABASE: chatbot_test_bootstrap
+        tmpfs: ['/var/lib/mysql']
+        volumes:
+            - './tests/infrastructure/mysql-grants.sql:/docker-entrypoint-initdb.d/20-test-grants.sql:ro'
+        networks: [chatbot-tests]
+        healthcheck:
+            test: ['CMD', 'mysqladmin', 'ping', '-pisolated-root-test-only']
+            interval: 2s
+            timeout: 2s
+            retries: 40
+    chatbot-test-redis:
+        image: redis:alpine
+        command: ['redis-server', '--save', '', '--appendonly', 'no', '--requirepass', 'isolated-test-only']
+        tmpfs: ['/data']
+        networks: [chatbot-tests]
+        healthcheck:
+            test: ['CMD', 'redis-cli', '-a', 'isolated-test-only', 'ping']
+            interval: 2s
+            timeout: 2s
+            retries: 20
+networks:
+    chatbot-tests:
+        internal: true

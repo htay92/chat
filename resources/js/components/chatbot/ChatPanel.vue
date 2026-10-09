@@ -11,6 +11,7 @@ defineProps<{
     validationError: string;
     error: string;
     canRetry: boolean;
+    retryDisabled?: boolean;
 }>();
 defineEmits<{
     close: [];
@@ -53,7 +54,7 @@ defineExpose({ focus: () => panel.value?.focus() });
                 Close
             </button>
         </header>
-        <p class="chat-notice">Demo only — responses are mocked.</p>
+        <p class="chat-notice">Demo FAQ answers. Questions are normally deleted within 91 days to improve FAQs. Don’t include personal or sensitive information.</p>
         <ChatTranscript :messages="messages" />
         <div class="chat-feedback">
             <p role="status" aria-live="polite">
@@ -64,7 +65,8 @@ defineExpose({ focus: () => panel.value?.focus() });
                 v-if="canRetry"
                 class="chat-button"
                 type="button"
-                @click="$emit('retry')"
+                :disabled="retryDisabled"
+                @click="!retryDisabled && $emit('retry')"
             >
                 Retry
             </button>
