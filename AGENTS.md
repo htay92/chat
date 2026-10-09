@@ -34,14 +34,19 @@ Linux:
 
 After installation, ask the user to restart their terminal. If the agent needs the restarted shell to continue, ask the user to reopen their terminal and rerun their original prompt.
 
-## Agent Setup
+## Docker Development Environment
 
-Install Laravel Boost from the application root before making application changes:
-
-```sh
-composer require laravel/boost --dev
-php artisan boost:install
-```
-
-Boost replaces these bootstrap instructions with guidelines tailored to the application. After installation, read `AGENTS.md` again and continue with the user's original request using the generated guidelines.
-</laravel-boost-guidelines>
+- This project uses Laravel Sail and Docker Compose.
+- PHP, Composer, MySQL, Redis, and Node.js run in Docker.
+- Do not run local PHP, Composer, or Artisan commands
+  when the equivalent Sail command is available.
+- Use `./vendor/bin/sail artisan` for Artisan commands.
+- Use `./vendor/bin/sail composer` for Composer.
+- Use `./vendor/bin/sail npm` for Node/npm.
+- Use `./vendor/bin/sail artisan test` for tests.
+- Use `./vendor/bin/sail php vendor/bin/pint --test`
+  for formatting checks.
+- Never run `docker compose down -v` without approval.
+- Never delete Docker volumes without approval.
+- Do not change published ports without explaining why.
+- Do not commit secrets from `.env`.
