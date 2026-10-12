@@ -16,6 +16,7 @@ abstract class ChatbotTestCase extends TestCase
             $this->markTestSkipped('Requires the guarded dedicated Sail test runner.');
         }
         parent::setUp();
+        IsolationGuard::verifyResolvedAdmin(['environment' => app()->environment(), 'cached' => app()->configurationIsCached(), 'session' => config('session'), 'database' => config('database')]);
         $db = config('database.connections.mysql');
         IsolationGuard::verify([
             'environment' => app()->environment(), 'db_host' => $db['host'],
@@ -37,6 +38,9 @@ abstract class ChatbotTestCase extends TestCase
         $pdo = new PDO('mysql:host='.$db['host'].';port=3306', $db['username'], $db['password']);
         $pdo->exec('CREATE DATABASE IF NOT EXISTS `'.$db['database'].'` CHARACTER SET utf8mb4 COLLATE utf8mb4_bin');
         foreach (glob(database_path('migrations/*chatbot*.php')) as $file) {
+            if (str_contains($file, 'chatbot_admin')) {
+                continue;
+            }
             $migration = require $file;
             $migration->up();
         }

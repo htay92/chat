@@ -1,6 +1,6 @@
 # 006 — Architecture and design
 
-Status: Draft for review; application code remains unchanged. Requirements and acceptance IDs are defined in the companion documents.
+Status: Application implementation explicitly approved on 2026-10-10. Architecture and requirement/acceptance IDs remain unchanged. See [implementation evidence](evidence/application.md).
 
 ## Existing foundations and dependencies
 
@@ -68,4 +68,4 @@ Use existing typography/colors/spacing conventions for a distinct admin layout w
 
 Reuse dedicated `compose.chatbot-tests.yaml`, `IsolationGuard` and `ChatbotTestCase`; extend the harness to create needed users/sessions and 006 migration only after validated test identity. Existing helper loads only `*chatbot*.php`, so auth fixtures cannot be assumed present. Negative guard tests must run before any DB/Redis/session connection. Every parallel connection, session backend and limiter must remain on owned isolated services/schema/namespaces. No migrate:fresh, DROP, flush, shared cache clear, development seeding or volume deletion. Use synthetic questions/accounts and owned transactions/keys. Record red/green chronology and pre-change baseline at implementation time; never reconstruct missing historical 005 evidence.
 
-Application test results, actual browser observations, production infrastructure evidence and privacy approval are separate records. Draft specifications and static inspection pass none of these gates.
+Application test results, actual browser observations, production infrastructure evidence and privacy approval are separate records. Specification approval and static inspection pass none of these gates.

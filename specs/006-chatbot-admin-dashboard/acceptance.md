@@ -1,6 +1,6 @@
 # 006 — Acceptance criteria
 
-Status: Draft for review. Every criterion is pending. Test names below describe planned suites, not implemented/passing tests.
+Status: Application implementation explicitly approved on 2026-10-10. Criteria below remain the approved contract; actual results and pending gates are tracked separately in [implementation evidence](evidence/application.md).
 
 | ID | Requirements | Observable behavior and required evidence |
 | --- | --- | --- |
@@ -28,4 +28,4 @@ During implementation create an evidence matrix mapping each AC to actual tests,
 - **Production infrastructure/security release:** owner/date/evidence for individual console access, admin credential recovery/revocation, approved authentication scope, TLS/cookies, actual proxy/IP topology, ingress/PHP limits, service permissions, redacted logging/APM, restricted audit sink independent of DB restores, retention scheduler/alerts, <=30-day backups and restore drill reapplying age/selected-row deletions. Static inspection and unit tests cannot pass these gates.
 - **Privacy/product release:** owner approval of restricted web access to visitor questions, preparation/privacy review, admin identity/session metadata purpose and retention, deletion instructions/audit retention, existing collection notice and complete backup/deletion wording. Do not silently amend 005 policy or mark its pending gates passed.
 
-The proposed decisions in requirements.md require specification approval first. Application readiness can be recorded separately, but production rollout and overall acceptance require applicable browser, security/infrastructure and privacy approvals. No deployment or acceptance is implied by creation of these documents.
+The application decisions in requirements.md were explicitly approved on 2026-10-10. Application readiness can be recorded separately, but production rollout and overall acceptance require applicable browser, security/infrastructure and privacy approvals. No deployment or acceptance is implied by creation of these documents.
