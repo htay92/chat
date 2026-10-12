@@ -10,7 +10,7 @@ class ChatbotTrustProxies extends TrustProxies
 {
     public function handle(Request $request, Closure $next)
     {
-        if (! ChatbotBoundary::applies($request)) {
+        if (! ChatbotBoundary::applies($request) && ! AdminBoundary::applies($request)) {
             return parent::handle($request, $next);
         }
         $proxies = config('chatbot.trusted_proxies', []);

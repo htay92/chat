@@ -1,6 +1,6 @@
 # 006 — Chatbot Admin Dashboard requirements
 
-Status: Draft for review. Neither implementation nor production release is approved by these documents. Feature 005 approval does not authorize Feature 006 implementation.
+Status: Application implementation explicitly approved by the user on 2026-10-10. Production release and overall acceptance remain pending. See [implementation evidence](evidence/application.md).
 
 ## Scope and inspected baseline
 
@@ -29,7 +29,7 @@ Feature 005 records passing automated revalidation (41 PHPUnit tests/304 asserti
 | R-13 | Follow ordered SDD/TDD with red-before-green evidence. Before any database/session/Redis test connection or mutation, verify fail-closed dedicated-service isolation. Extend the 005 harness safely for users/sessions/006 schema. Run applicable Sail PHPUnit, Vitest, typecheck, build and Pint checks; preserve existing evidence and separate automated, browser, production and privacy acceptance. | AC-13 / IsolationGuard and verification record |
 | R-14 | No AI integration, public management APIs, separate frontend, admin dashboard outside this scope, roles package, analytics, review-state tracking, notes, exports or unrelated functionality. Add no dependency without explicit approval. Do not commit automatically. | AC-14 / Route, dependency and diff review |
 
-## Proposed product decisions requiring approval
+## Approved application product decisions
 
 1. A single chatbot-admin capability grants FAQ management and restricted question deletion; deletion additionally requires a password confirmed within 15 minutes. More granular roles are deferred.
 2. Build minimal session login and operator-only account create/grant/revoke/password-reset workflows using existing Laravel facilities. Public registration, browser account management, email recovery, SSO and MFA are outside this feature; the security owner must approve this authentication scope before production release.
@@ -37,4 +37,4 @@ Feature 005 records passing automated revalidation (41 PHPUnit tests/304 asserti
 4. Search is case-insensitive, accent-sensitive literal substring search; default page size 25, optional 50, stable cursor navigation. Do not add a mutable “resolved” state or historical metrics.
 5. Selected-question deletion requires protected restoration instructions for the 30-day backup lifetime. The deployment/privacy owners must approve the durable storage and restore runbook; app tests cannot establish backup erasure or production readiness.
 
-Approval should cover all four documents together. Unresolved changes to these choices require a revised specification before implementation.
+The user approved all four documents and these application decisions on 2026-10-10. Any change to these choices requires revised specification approval; production security/privacy gates remain separate.

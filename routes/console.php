@@ -1,5 +1,7 @@
 <?php
 
+use App\Chatbot\Admin\AdminConsole;
+use App\Chatbot\Admin\FileRestorationSink;
 use App\Chatbot\FaqConsole;
 use App\Chatbot\OperatorAccess;
 use App\Chatbot\QuestionRetention;
@@ -13,6 +15,12 @@ use Illuminate\Support\Facades\Schedule;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
+
+foreach (['create', 'grant', 'revoke', 'password-reset'] as $action) {
+    Artisan::command('chatbot:admin:'.$action.($action === 'create' ? '' : ' {user}'), function () use ($action) {
+        return app(AdminConsole::class)->run($this, $action);
+    })->purpose('Restricted chatbot admin '.$action);
+}
 
 foreach (['create', 'update', 'activate', 'deactivate', 'list', 'show'] as $action) {
     $signature = 'chatbot:faq:'.$action.(in_array($action, ['update', 'activate', 'deactivate', 'show']) ? ' {faq}' : '').(in_array($action, ['create', 'update']) ? ' {--stdin : Read question/answer JSON from protected stdin}' : '');
@@ -67,3 +75,18 @@ Artisan::command('chatbot:questions:delete-session', function () {
 Schedule::command('chatbot:questions:purge')->daily()->timezone('UTC')->withoutOverlapping()->onFailure(function () {
     Log::error('chatbot_scheduled_purge_failed');
 });
+
+Artisan::command('chatbot:admin:expire-restoration', function () {
+    try {
+        app(OperatorAccess::class)->identity();
+        $count = app(FileRestorationSink::class)->expire();
+        $this->info('Expired '.$count.' restoration records.');
+
+        return 0;
+    } catch (Throwable) {
+        $this->error('Restoration expiry failed.');
+
+        return 1;
+    }
+});
+Schedule::command('chatbot:admin:expire-restoration')->daily()->timezone('UTC')->withoutOverlapping();

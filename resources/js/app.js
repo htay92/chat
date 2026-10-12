@@ -1,5 +1,10 @@
 //
 
 import { mountChatbot } from './chatbot/mount';
+import { mountAdmin } from './admin/mount';
 
-mountChatbot();
+if (document.querySelector('[data-chatbot-admin]')) {
+    mountAdmin();
+} else {
+    mountChatbot();
+}

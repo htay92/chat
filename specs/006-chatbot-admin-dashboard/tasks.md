@@ -1,6 +1,6 @@
 # 006 — Ordered SDD/TDD tasks
 
-Status: Draft; all implementation tasks are pending. Do not begin application work before explicit approval of all four documents and proposed product decisions.
+Status: Application implementation explicitly approved on 2026-10-10, including the decisions in requirements.md. Progress and verification are recorded below and in [implementation evidence](evidence/application.md).
 
 For each task: identify acceptance-linked cases, write tests, run and record the meaningful failure before implementation, implement the minimum change, record green results and refactor. Record actual commands, test names/counts, environment and limitations in an implementation evidence document created during approved work. Never mark planned tests as passing.
 
@@ -32,6 +32,26 @@ SAIL_FILES=compose.chatbot-tests.yaml APP_SERVICE=chatbot-test-runner ./vendor/b
 
 Inspect current runner/bootstrap compatibility before invoking these commands; the guard suite itself must not connect to databases/Redis. No dependency install, migration/reset of development data, Redis flush, cache clear, published-port change or Docker volume deletion is authorized by these tasks. Request approval before changing approved requirements, introducing dependencies or unsafe operations.
 
-## Current evidence
+## Specification-only evidence (historical)
 
-Specification drafting only: read AGENTS, existing specs and 005 evidence, package manifests, routing/bootstrap, auth/session configuration, models/services, users migration, frontend mounting and isolated test helper. PHP/Composer prerequisite availability was checked. No application tests, database/Redis operations, browser checks or production checks were run for 006. No application implementation or automatic commit was performed. Every implementation task remains unchecked; historical 005 results are not 006 evidence.
+Specification drafting only: read AGENTS, existing specs and 005 evidence, package manifests, routing/bootstrap, auth/session configuration, models/services, users migration, frontend mounting and isolated test helper. PHP/Composer prerequisite availability was checked. No application tests, database/Redis operations, browser checks or production checks were run for 006. No application implementation or automatic commit was performed. At specification drafting, every implementation task was pending; historical 005 results are not 006 evidence. The implementation update below supersedes this historical status.
+
+
+## Implementation update — 2026-10-10
+
+Application approval received; tasks were verified/completed in order against the pre-existing partial backend, followed by final regression hardening. See [actual results and AC mapping](evidence/application.md).
+
+| Task | Current status |
+| --- | --- |
+| T-01 | Complete for this implementation session: connection-free fail-closed guard red/green, guarded harness inspection and current-state baseline recorded before application changes. Earlier partial backend was already present. |
+| T-02 | Existing provisioning implemented and verified; historical red-before-green evidence unavailable. |
+| T-03 | Authentication/authorization/CSRF/session/real Redis/body/proxy behavior implemented and verified; earlier backend red chronology unavailable. |
+| T-04 | Query/metrics/DTO behavior verified; new invalid-cursor fix has red/green evidence. |
+| T-05 | FAQ CRUD/concurrency implemented and verified; earlier backend red chronology unavailable. |
+| T-06 | FAQ deletion/draft preparation/replay history implemented and verified; earlier backend red chronology unavailable. |
+| T-07 | Selected-row deletion and restoration ordering verified; added actual file permission/expiry tests and public-directory safety fix with red/green evidence. Production sink/restore gate pending. |
+| T-08 | Complete application implementation and automated checks with red/green evidence for missing UI/page integration and interaction fixes. |
+| T-09 | Automated regression/mount checks complete; real-browser layout/zoom/keyboard/spoken accessibility pending. |
+| T-10 | Automated checks, scope review, evidence matrix and runbook complete. Manual and production/privacy gates pending; no overall acceptance or deployment claimed. |
+
+Final: PHPUnit 70 tests/864 assertions; Vitest 63 tests; typecheck/build/Pint pass. No current automated failures. Build optional-font optimization warning remains non-failing. AC-13 retains unavailable red chronology for pre-existing partial code. No production data changes, development/production migration/provisioning, destructive reset or automatic commit.

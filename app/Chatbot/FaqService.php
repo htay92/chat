@@ -63,4 +63,15 @@ class FaqService
 
         return $faq && $faq->normalized_question === $text ? $faq : null;
     }
+
+    public function delete(int $id, string $revision): void
+    {
+        DB::transaction(function () use ($id, $revision) {
+            $faq = Faq::lockForUpdate()->findOrFail($id);
+            if (! hash_equals($this->revision($faq), $revision)) {
+                throw new Conflict('FAQ changed; reload before deleting.');
+            }
+            $faq->delete();
+        });
+    }
 }
