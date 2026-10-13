@@ -1,3 +1,11 @@
+# Laravel Chatbot
+
+Developer documentation: **[Setup, architecture, admin workflows, testing and troubleshooting](docs/developer.md)**.
+
+This application uses prepared MySQL FAQ answers, a Vue 3/TypeScript chatbot and an authenticated admin dashboard. See [AGENTS.md](AGENTS.md) for contribution rules and [feature specifications](specs/README.md) for the SDD workflow. Production and privacy release gates are tracked separately in the feature runbooks.
+
+The Laravel framework information below is retained from the original project template.
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
